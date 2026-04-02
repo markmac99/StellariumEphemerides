@@ -1,5 +1,5 @@
 # StellariumEphemerides
-Display NASA Horizons Ephemerides Ephemerides data in Stellarium
+Display NASA Horizons Ephemerides data in Stellarium, based on nbhasker's [JWSTStellarium](https://github.com/nbhasker/JWSTStellarium) script. 
 
 This set of scripts consumes NASA Horizons Ephemerides data for an object such as the JWST and allows it 
 to be displayed in Stellarium.
