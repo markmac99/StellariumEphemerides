@@ -1,0 +1,53 @@
+// This Stellarium script plots positions of an object in Stellarium using RA/Dec coordinates from Nasa Horizons
+// Narjala Bhasker - January 16, 2022
+
+// positions from Nasa Horizons should be in this file
+
+include("current_object.inc");
+
+// Fixup RA strings to have hours, minutes, seconds (hms) format required by Stellarium functions
+
+function fixupRA (ra) {
+	ret = ra.substr(0,2) + "h" + ra.substr(3,2) + "m" + ra.substr(6,5) + "s";
+	return ret
+}
+
+// Fixup Dec strings to have degrees, arcminutes, arcseconds (dms) format required by Stellarium functions
+
+function fixupDec (dec) {
+	ret = dec.substr(0,3) + "d" + dec.substr(4,2) + "m" + dec.substr(7,4) + "s";
+	return ret
+}
+
+// Wrapper function for Stellarium marker and label functions
+
+function drawMarkerWithLabel (label, ra, dec, shape, color, size, font, direction, distance) {
+	ret = MarkerMgr.markerEquatorial(fixupRA(ra), fixupDec(dec), true, true, shape, color, size);  
+	core.debug(ret)
+	ret = LabelMgr.labelEquatorial(label, fixupRA(ra), fixupDec(dec), true, font, color, direction, distance); 
+	core.debug(ret)
+}
+
+// Clear old markers and labels
+
+MarkerMgr.deleteAllMarkers()
+LabelMgr.deleteAllLabels()
+
+// Draw markers and labels
+
+color     = "#ffff00"
+shape     = "gear"
+size      = 12
+font      = 16
+direction = "E"
+distance  = 20
+
+// Note that => function notation doesn't seem to be supported so using traditional function notation
+
+currentobject.forEach(function(e){
+	drawMarkerWithLabel(objname + " " + e.label, e.ra, e.dec, shape, color, size, font, direction, distance);
+});
+
+
+// Slew Stellarium to the first JWST point
+core.moveToRaDecJ2000(fixupRA(currentobject[0].ra), fixupDec(currentobject[0].dec), 1)
