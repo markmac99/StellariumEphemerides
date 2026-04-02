@@ -23,13 +23,18 @@ def processFile(filename):
 
     datablock = []
     startdata = False
+    labelpoint = 0
     for li in flines:
         if li[:5] == '$$SOE':
             startdata = True
         if li[:5] == '$$EOE':
             break
         if startdata and li[:5] != '$$SOE':
-            label = li[:18].strip().replace(' ', '_')
+            if not labelpoint %10:
+                label = li[:18].strip().replace(' ', '_')
+            else:
+                label = ' '
+            labelpoint += 1
             ra = li[23:34]
             dec = li[35:46]
             outl = {'label': label, 'ra': ra, 'dec': dec}
